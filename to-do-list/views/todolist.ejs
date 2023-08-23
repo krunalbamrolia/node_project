@@ -1,0 +1,56 @@
+<style>
+    body {
+        background-color: beige;
+    }
+    a {
+    text-decoration: none;
+    }
+    .center {
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+</head>
+<body>
+    <a href="/control/">CONTROL</a>
+    <center><h1>ADD TASK</h1></center>
+
+    <form action="/insertRecord" method="post">
+        <table style="line-height: 2.8;" class="center">
+            <tr>
+                <td><label>TASK NAME</label></td>
+                <td><input type="text" name="tnm" required></td>
+            </tr>
+            <tr>
+                <td><label>DESCRIPTION</label></td>
+                <td><input type="text" name="desc" required></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="ADD"></td>  
+            </tr>
+        </table>
+    </form>
+    <table class="user">
+        <tr style="text-decoration: solid;">
+            <th>TASK NAME</th>
+            <th>DESCRIPTION</th>
+            <th colspan="2">operation</th>
+        </tr>
+
+    <% for (var l of todolist){ %>   
+        <tr>
+            <td><%= l.tnm %></td>
+            <td><%= l.desc %></td>     
+            <td><a href="/update/<%= l.id%>">Update</a></td>
+            <td><a href="/delete/<%= l.id%>">Delete</a></td>
+        </tr>
+        <% } %>
+    </table>
+</body>
+</html>
