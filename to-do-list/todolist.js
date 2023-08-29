@@ -1,39 +1,67 @@
 const express = require('express');
-const PORT = 9899
+const bodyParser = require('body-parser');
 const app = express();
+const path = require('path'); // Import the path module
+const PORT = 5111;
 
-app.use(express.urlencoded());
-app.set("view engine", "ejs");
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: true }));
 
-    const todolist = [ ];3
+let tasks = [];
 
-        app.get('/',(req,res) => {
-        res.render('todolist',{
-            todolist:todolist
-            })
+app.get('/', (req, res) => {
+    res.render('todolist', { tasks });
 });
 
-// --------------INSERT DATA IN TABLE------------------------------------
-app.post("/insertRecord",async(req , res) =>
-{
-    console.log(req.body)
-
-    var tnm=req.body.tnm
-    var desc=req.body.desc
-    
-
-    const todo ={
-        // id:Math.round(Math.random()*1000),
-        tnm :tnm,
-        desc :desc,
-       
+//------------- status code -------------------
+app.get('/update-status/:id', (req, res) => {
+    const id = req.params.id;
+    const task = tasks.find(task => task._id === id);
+    if (task) {
+        res.render('status', { task });
+    } else {
+        res.redirect('/');
     }
-    todolist.push(todo);
-    res.redirect("/")
-})
+});
 
+//------------ insert data code ------------------
+app.post('/', (req, res) => {
+    const { taskName, taskDescription } = req.body;
 
-//------PORT RUN----------
-app.listen(PORT, ()=>{
-    console.log(`server is runnig............${PORT}`)
-})
+    tasks.push({ _id: Date.now().toString(), 
+        name: taskName, 
+        description: taskDescription, 
+        isDone: false });
+
+    res.redirect('/');
+});
+
+//---------- status change code -----------------
+app.post('/toggle-status/:id', (req, res) => {
+    const id = req.params.id;
+    const newStatus = req.body.status === 'done';
+    const task = tasks.find(task => task._id === id);
+    
+    if (task) {
+        task.isDone = newStatus;
+    }
+
+    res.redirect('/');
+});
+
+//--------------- control code ----------------
+app.get('/all-tasks', (req, res) => {
+    res.render('alltasks', { tasks });
+});
+
+//------------- delete code --------------
+app.get('/delete-task/:id', (req, res) => {
+    const id = req.params.id;
+    tasks = tasks.filter(task => task._id !== id);
+    res.redirect('/all-tasks');
+});
+
+//---------- listen port code ----------------------
+app.listen(PORT, () => {
+    console.log(`Server is running on port ........... ${PORT}`);
+});
