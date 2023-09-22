@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const path = require('path'); // Import the path module
 const PORT = 5111;
 
 app.set('view engine', 'ejs');
@@ -32,7 +31,7 @@ app.post('/', (req, res) => {
         name: taskName, 
         description: taskDescription, 
         isDone: false });
-
+ 
     res.redirect('/');
 });
 
@@ -60,6 +59,33 @@ app.get('/delete-task/:id', (req, res) => {
     tasks = tasks.filter(task => task._id !== id);
     res.redirect('/all-tasks');
 });
+
+//---------- update code ------------------
+app.get('/edit-data/:id', (req, res) => {
+    const id = req.params.id;
+    const task = tasks.find(task => task._id === id);
+
+    if (task) {
+        res.render('edit-data', { task });
+    } else {
+        res.redirect('/');
+    }
+});
+
+// ----------- Update Task Data ----------
+app.post('/update-data/:id', (req, res) => {
+    const id = req.params.id;
+    const task = tasks.find(task => task._id === id);
+
+    if (task) {
+        task.name = req.body.taskName;
+        task.description = req.body.taskDescription;
+        res.redirect('/all-tasks');
+    } else {
+        res.redirect('/all-tasks');
+    }
+});
+
 
 //---------- listen port code ----------------------
 app.listen(PORT, () => {

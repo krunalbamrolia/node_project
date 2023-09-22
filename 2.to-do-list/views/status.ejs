@@ -4,8 +4,6 @@
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>CONTROL PAGE</title>
-     
-     <!-- css code -->
      <style>
       body {
           font-family: Arial, sans-serif;
@@ -58,6 +56,7 @@
       a {
           text-decoration: none;
           color: #007bff;
+          margin-top: 50px;
       }
 
       a:hover {
@@ -69,6 +68,8 @@
  <body>
   
   <h1>UPDATE TASK STATUS</h1>
+
+    <!-- status change here. by default status notDone -->
      <form action="/toggle-status/<%= task._id %>" method="POST">
          <p>Task: <%= task.name %></p>
          <p>Description: <%= task.description %></p>
